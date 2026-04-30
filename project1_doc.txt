@@ -1,0 +1,898 @@
+2026
+DOCUMENTATION
+SMART INVENTORY AND DEMAND FORCASTING SYSTEM
+2026
+DOCUMENTATION
+SMART INVENTORY AND DEMAND FORCASTING SYSTEM
+
+
+
+
+
+
+
+
+
+NIT3003
+IT CAPSTONE PROJECT 1
+Prepared by:
+Jeeya Balla(s8105622)
+ Aayush Pratap Khadgi(s8140991) Aashish Karki(s8132238)
+
+NIT3003
+IT CAPSTONE PROJECT 1
+Prepared by:
+Jeeya Balla(s8105622)
+ Aayush Pratap Khadgi(s8140991) Aashish Karki(s8132238)
+
+Table of Contents
+Introduction (Aashish Karki)	5
+Industry Context and Background	5
+Problem Definition and Significance	5
+Existing Solutions and Market Gap	6
+NetSuite and SAP Inventory Management	6
+Strengths:	6
+Limitations:	6
+Zoho Inventory and TradeGecko (QuickBooks Commerce)	7
+Strengths:	7
+Limitations:	7
+Proposed Solution, Aim, and Objectives	7
+Project Aim	7
+Project Objectives	8
+1.5 Project Scope and Boundaries	8
+In Scope	8
+Out of Scope	9
+1.6 System Overview	9
+2 Functional Requirements (Aayush Pratap Khadgi)	10
+FR-01: User Authentication and Access Control	10
+FR-02: Add New Inventory Item	11
+FR-03: Update Inventory Quantity	11
+FR-04: View Inventory Dashboard	12
+FR-05: Historical Stock Movement Recording	13
+FR-06: Generate Demand Forecast	14
+FR-07: Compare Forecast with Actual Demand	14
+FR-08: Reorder Recommendation Generation	15
+FR-09: Automatic Stock Replenishment Update	16
+3 Non-Functional Requirements (Jeeya Balla)	16
+3.1 Security Requirements	17
+NFR-01: Authentication Enforcement	17
+NFR-02: Secure Credential Storage	17
+NFR-03: Role-Based Access Control	17
+3.2 Performance Requirements	17
+NFR-04: Dashboard Response Time	18
+NFR-05: Forecast Processing Time	18
+NFR-06: Concurrent User Handling	18
+3.3 Usability Requirements	18
+NFR-07: Learnability	18
+NFR-08: Interface Consistency	19
+NFR-09: Forecast Output Clarity	19
+3.4 Reliability and Data Integrity Requirements	19
+NFR-10: System Availability	19
+NFR-11: Data Integrity Assurance	19
+NFR-12: Consistent Transaction Handling	20
+4 Use Case	20
+Inventory Item Creation (Add New Inventory Item)	20
+Basic Flow (Main Scenario)	20
+Alternative Flows:	21
+Postconditions:	21
+Update Inventory Quantity (Stock on hand adjustment)	21
+Prerequisites:	21
+Basic Flow (Main Scenario):	21
+Alternative Flows:	22
+Postconditions:	22
+Generate Demand Forecast	22
+Prerequisites:	22
+Basic Flow (Main Scenario):	22
+Alternative Flows:	23
+Postconditions:	23
+Compare Forecast vs Actual Demand	23
+Prerequisites:	23
+Basic Flow (Main Scenario):	24
+Alternative Flows:	24
+Postconditions:	24
+View Low-Stock Alerts	24
+Prerequisites:	24
+Basic Flow (Main Scenario):	24
+Alternative Flows:	25
+Postconditions:	25
+5 Sequence Diagram - Overall System Interaction Flow	25
+Overview:	25
+Actors and System Components:	26
+Prerequisites:	26
+Main Flow – System Interaction:	26
+User Authentication:	26
+Inventory Dashboard Access:	26
+Inventory Item Creation:	27
+Inventory Quantity Update:	27
+Demand Forecast Generation:	27
+Forecast Evaluation:	27
+Alternative and Exception Scenario:	28
+Quality and Design Considerations:	28
+Summary:	28
+6 UI Design	31
+7 Resource Management	37
+Human Resources	37
+Roles and Responsibility	37
+Software and Tools:	38
+Data Resources:	38
+Time Resources:	38
+8 Pseudocode	40
+9 Risk Management and Mitigation	45
+10 Mitigation corresponding to Risks, matched using Risk ID.	45
+11 Timeline:	46
+12 Conclusion:	47
+13 References‌	48
+
+
+Introduction (Aashish Karki)
+
+Industry Context and Background
+
+In recent years, effective inventory management has become a critical operational requirement for organizations across industries such as retail, manufacturing, logistics, and supply chain management. Businesses are required to continuously balance supply and demand to avoid issues such as overstocking, excessive inventory holding costs, and stock shortages that directly impact customer satisfaction and revenue generation. As global markets become more competitive and customer expectations continue to rise, organizations are increasingly expected to make faster and more informed inventory-related decisions.
+Despite the significant progress and accessibility of digital inventory management technologies, many small and medium-sized enterprises (SMEs) still rely on basic inventory tracking tools and manual forecasting methods. These traditional approaches are largely reactive rather than predictive. They focus on monitoring current stock levels but fail to provide meaningful insights into future demand patterns. As a result, inventory decisions are often based on historical assumptions or short-term observations rather than data-driven predictions. This limitation frequently leads to inefficient procurement decisions, inconsistent stock availability, and avoidable financial losses.
+With the growing availability of web technologies, cloud-based platforms, and data analytics, there is increasing potential to enhance inventory systems by integrating demand forecasting capabilities. Such systems can transform raw inventory data into actionable insights, allowing businesses to anticipate demand fluctuations and respond proactively rather than reactively.
+ 
+Problem Definition and Significance
+This project addresses the lack of intelligent, predictive demand forecasting integrated within inventory management systems, with a specific focus on small and medium-sized enterprises. Many SMEs face challenges in adopting advanced analytics solutions due to factors such as high implementation costs, technical complexity, and limited access to skilled personnel. As a result, inventory planning decisions are often made based on intuition, experience, or static reorder rules rather than predictive analysis.
+
+Research by McKinsey & Company (2022) highlights that inaccurate demand forecasting and inefficient inventory practices can increase inventory holding costs by up to 25%, while simultaneously reducing service levels and overall customer satisfaction. Similarly, studies published in the International Journal of Production Economics identify forecasting inaccuracies as one of the most persistent challenges in supply chain and inventory management. These issues are particularly pronounced in SMEs, where limited resources amplify the impact of poor inventory decisions.
+
+Without integrated forecasting support, organizations are unable to identify future stock risks in advance. This results in frequent stock shortages, overstock situations, and delayed response to market demand changes. Therefore, there is a strong need for an inventory management solution that incorporates predictive intelligence while remaining accessible, understandable, and practical for SMEs.
+ 
+Existing Solutions and Market Gap
+Several commercial inventory management systems currently exist in the market, including NetSuite, SAP Inventory Management, Zoho Inventory, and TradeGecko (QuickBooks Commerce). While these solutions provide effective inventory tracking and reporting, they present notable limitations when evaluated from the perspective of small and medium-sized enterprises (SMEs).
+
+NetSuite and SAP Inventory Management are enterprise-level systems primarily designed for large organisations.
+Strengths:
+•	Highly scalable with advanced reporting and integration capabilities
+•	Strong support for complex supply chain operations
+
+Limitations:
+•	High implementation and licensing costs
+•	Complex configuration requiring specialised technical expertise
+•	Forecasting features are not central to inventory decision-making
+
+Zoho Inventory and TradeGecko (QuickBooks Commerce) focus on SMEs and offer simpler inventory management tools.
+Strengths:
+•	User-friendly interfaces and affordable pricing
+•	Suitable for basic inventory tracking and order management
+Limitations:
+•	Limited demand forecasting capabilities
+•	Forecasting features rely on historical trends rather than predictive analytics
+•	Advanced analytics are often offered as premium add-ons
+
+These limitations reveal a clear market gap for an inventory management system that integrates intelligent demand forecasting as a core function while remaining affordable, simple, and accessible for SMEs. The proposed Smart Inventory Management System aims to address this gap by combining inventory tracking with forecasting-driven reorder recommendations.
+ 
+Proposed Solution, Aim, and Objectives
+To address the identified market gap, this project proposes the design of a Smart Inventory Management System with Demand Forecasting Support. The proposed system integrates real-time inventory tracking with predictive demand forecasting techniques to assist businesses in making proactive and informed inventory decisions. Unlike traditional systems that rely on static reorder levels, the proposed solution conceptually incorporates forecasting outputs to support automated and data-driven reordering strategies.
+
+Project Aim
+
+The primary aim of this project is to design and develop an intelligent inventory management system that improves inventory planning accuracy through integrated demand forecasting.
+
+Project Objectives
+The key objectives of this project are to:
+•	Analyse and understand the challenges associated with inventory management and demand forecasting in modern business environments.
+•	Design a system architecture that integrates inventory tracking with demand forecasting capabilities.
+•	Conceptually apply forecasting models such as ARIMA and Long Short-Term Memory (LSTM) to predict future demand trends.
+•	Define and document comprehensive functional and non-functional requirements for the proposed system.
+•	Demonstrate how forecasting outputs can support data-driven inventory decisions, leading to improved efficiency and operational performance.
+ 
+1.5 Project Scope and Boundaries
+
+In Scope
+The scope of this project includes:
+•	Conceptual and practical design of a web-based inventory management and demand forecasting system.
+•	Specification of functional and non-functional system requirements.
+•	Design of system architecture and database structures comparable to commercial inventory systems.
+•	Development and testing of the system within a local host environment.
+
+Out of Scope
+The following aspects are considered out of scope for this project:
+•	Full-scale commercial deployment of the system.
+•	Real-time integration with live business or enterprise resource planning (ERP) systems.
+•	Mobile application development.
+•	Large-scale commercial or cloud-based implementation.
+
+1.6 System Overview
+The proposed system follows a client–server architecture, consisting of a web-based frontend, a backend API, and a relational database. Users interact with the system through a browser-based interface, while all data processing and business logic are handled by the backend services. This separation of concerns improves maintainability, scalability, and security.
+Key system modules include:
+•	Product Management
+•	Warehouse Management
+•	Stock Monitoring
+•	Demand Forecasting Support
+•	Reorder and Stock Update Mechanisms
+
+Each module is designed to operate independently while remaining fully integrated with the rest of the system.
+ 
+2 Functional Requirements (Aayush Pratap Khadgi)
+Functional requirements describe what the system must do to support inventory management and demand forecasting. These requirements are structured across three perspectives: front-end, server-end, and database design. Each requirement is uniquely identified and mapped to relevant non-functional requirements to ensure traceability and system quality.
+FR-01: User Authentication and Access Control
+Front-End:
+Users shall be able to register and log in through a secure web-based authentication interface. The login page shall accept valid credentials and restrict access to authorised users only. User interface elements and available features shall vary depending on the assigned user role (e.g., administrator or staff).
+
+Server-End:
+The server shall validate user credentials using secure authentication mechanisms. Upon successful login, the server shall generate and manage authenticated sessions. Role-based access control shall be enforced to prevent unauthorised access to restricted functionalities.
+
+Database Design:
+Aspect	Description
+Table Name	Users
+Operation	Read
+Primary Key	UserID
+Fields Accessed	Username, PasswordHash, Role
+Security Rule	Passwords stored using hashing algorithms
+Supported NFRs	NFR-01, NFR-02, NFR-03
+ 
+FR-02: Add New Inventory Item
+Front-End:
+Users shall be able to access an “Add Inventory Item” form from the dashboard. The form shall include input fields for product name, SKU, category, price, quantity, reorder level, supplier, and supplied date. Validation feedback shall be displayed for invalid or missing inputs.
+
+Server-End:
+The server shall receive item data in JSON format and validate all fields, including text length, numeric ranges, and user authorisation. If validation fails, a 400 Bad Request response shall be returned. Upon successful validation, the server shall generate a unique item identifier and confirm record creation.
+
+Database Design:
+Aspect	Description
+Table Name	Inventory
+Operation	Create
+Primary Key	ItemID
+Fields Stored	ItemName, SKU, Category, Price, Quantity, ReorderLevel, SupplierID
+Example Record	(67, “Film Camera”, “Home Appliances”)
+Supported NFRs	NFR-01, NFR-04, NFR-11
+ 
+FR-03: Update Inventory Quantity
+
+Front-End:
+Users shall be able to update the quantity of existing inventory items using numeric input fields. Changes shall be confirmed through an action button to prevent accidental updates.
+
+Server-End:
+The server shall validate that updated quantities are non-negative and logically consistent. Each update action shall be logged with user identity and timestamp for audit purposes.
+
+Database Design:
+Aspect	Description
+Table Name	Inventory
+Operation	Update
+Primary Key	ItemID
+Fields Updated	Quantity
+Audit Table	InventoryHistory
+Audit Fields	ItemID, OldQuantity, NewQuantity, UpdatedAt
+Supported NFRs	NFR-11, NFR-12
+ 
+FR-04: View Inventory Dashboard
+
+Front-End:
+The system shall display a structured inventory dashboard containing tabular views of products with filtering and sorting options (e.g., category, stock level). Items with low or critical stock levels shall be visually highlighted.
+
+Server-End:
+The server shall retrieve inventory data, compute stock status indicators, and determine whether items require reordering based on predefined thresholds and forecasting outputs.
+
+Database Design:
+Aspect	Description
+Table Name	Inventory
+Operation	Read
+Query Type	Select with filters
+Computed Fields	LowStockFlag, StockStatus
+Result Set	Inventory item list
+Supported NFRs	NFR-04, NFR-07
+ 
+FR-05: Historical Stock Movement Recording
+
+Front-End:
+The system shall automatically record stock movements triggered by updates, sales, or replenishment events without requiring manual input from users.
+
+Server-End:
+The server shall log each stock movement event with reference to the affected item, quantity change, and timestamp. This data shall be used as input for forecasting processes.
+
+Database Design:
+Aspect	Description
+Table Name	SalesHistory
+Operation	Create
+Fields Stored	ItemID, QuantityChanged, Timestamp
+Data Usage	Forecasting input
+Supported NFRs	NFR-09, NFR-12
+ 
+FR-06: Generate Demand Forecast
+
+Front-End:
+Users shall be able to select an individual product or product category and define a forecasting period using a “Generate Forecast” action. Forecast results shall be displayed in graphical and tabular formats.
+
+Server-End:
+The server shall retrieve historical sales data, preprocess it, and apply forecasting models such as ARIMA or LSTM to predict future demand. Forecast generation shall be handled asynchronously to maintain system responsiveness.
+
+Database Design:
+Aspect	Description
+Source Table	SalesHistory
+Operation	Read
+Forecast Table	ForecastResults
+Operation	Create
+Fields Stored	ForecastID, ItemID, Period, PredictedDemand
+Supported NFRs	NFR-05, NFR-06, NFR-09
+ 
+FR-07: Compare Forecast with Actual Demand
+
+Front-End:
+Users shall be able to view side-by-side comparisons of predicted demand and actual demand through tables or charts. Visual indicators shall highlight deviations and trends.
+
+Server-End:
+The server shall compute forecast accuracy metrics such as error rate and deviation percentage to support evaluation of forecasting performance.
+
+Database Design:
+Aspect	Description
+Tables Accessed	SalesHistory, ForecastResults
+Operation	Read
+Join Condition	ItemID and TimePeriod
+Computed Metrics	ForecastError, Accuracy
+Supported NFRs	NFR-09, NFR-12
+ 
+FR-08: Reorder Recommendation Generation
+
+Front-End:
+The system shall display reorder recommendations when forecasted demand exceeds available stock. Notifications or alerts shall inform users of recommended reorder quantities.
+
+Server-End:
+The server shall compare forecast results against current inventory levels and reorder thresholds. Reorder suggestions shall be dynamically calculated and updated.
+
+Database Design:
+Aspect	Description
+Tables Accessed	Inventory, ForecastResults
+Operation	Read
+Computed Fields	RecommendedReorderQuantity
+Supported NFRs	NFR-06, NFR-11
+ 
+FR-09: Automatic Stock Replenishment Update
+
+Front-End:
+Users shall be able to record stock replenishment events through a confirmation interface once new inventory is received.
+
+Server-End:
+Upon confirmation, the server shall automatically update stock quantities and recalculate future reorder requirements based on updated inventory levels.
+
+Database Design:
+Aspect	Description
+Table Name	Inventory
+Operation	Update
+Trigger Event	Stock received
+Supported NFRs	NFR-11, NFR-12
+ 
+
+ 
+3 Non-Functional Requirements (Jeeya Balla)
+
+Non-functional requirements define the quality attributes and operational constraints of the Smart Inventory Management and Demand Forecasting System. These requirements describe how well the system performs its functions, ensuring that it remains secure, reliable, usable, and scalable while supporting data-driven decision making.
+ 
+3.1 Security Requirements
+
+Security is critical due to the sensitive nature of inventory, sales, and forecasting data. The system must prevent unauthorised access and protect stored information from misuse or compromise.
+
+NFR-01: Authentication Enforcement
+The system shall restrict access to authenticated users only. All system features, including inventory management and forecasting functions, shall require successful authentication before use.
+(Supports FR-01, FR-02, FR-06)
+
+NFR-02: Secure Credential Storage
+User credentials shall be securely stored using industry-standard hashing techniques. Plain-text passwords shall never be stored or transmitted.
+(Supports FR-01, FR-06)
+
+NFR-03: Role-Based Access Control
+The system shall enforce role-based access control to restrict sensitive operations such as inventory deletion, forecast generation, and reorder approvals to authorised roles only.
+(Supports FR-01, FR-02, FR-08)
+ 
+3.2 Performance Requirements
+
+The system must provide timely responses to ensure smooth operational use and effective decision-making, particularly when handling forecasting computations.
+
+NFR-04: Dashboard Response Time
+Inventory dashboard data shall be displayed within two seconds under normal operating conditions, including filtering and stock status calculations.
+(Supports FR-04)
+
+NFR-05: Forecast Processing Time
+Demand forecasts shall be generated and returned within five seconds for standard forecasting periods to ensure usability and system responsiveness.
+(Supports FR-06)
+
+NFR-06: Concurrent User Handling
+The system shall support a minimum of 50 concurrent users without noticeable degradation in performance.
+(Supports FR-01, FR-04, FR-06)
+ 
+3.3 Usability Requirements
+
+The system is designed for small and medium-sized enterprises; therefore, ease of use and clarity of information presentation are essential.
+
+NFR-07: Learnability
+New users shall be able to complete core tasks such as adding inventory items, viewing stock levels, and interpreting forecast results within three minutes without external guidance.
+(Supports FR-01, FR-02, FR-04)
+
+NFR-08: Interface Consistency
+The user interface shall maintain consistent layout, navigation structure, and visual design across all pages to minimize    cognitive load and improve user experience.
+(Supports all Front-End FRs)
+
+NFR-09: Forecast Output Clarity
+Forecast results shall be clearly labelled and visually distinguishable from historical data using charts, tables, or indicators to support accurate interpretation.
+(Supports FR-06, FR-07)
+3.4 Reliability and Data Integrity Requirements
+Reliability is essential to maintain trust in system outputs, particularly when automated decisions such as reorder recommendations are involved.
+NFR-10: System Availability
+The system shall maintain a minimum uptime of 99%, excluding scheduled maintenance periods.
+(Supports all FRs)
+NFR-11: Data Integrity Assurance
+Inventory updates, forecast records, and replenishment actions shall not result in data loss or inconsistency. All critical operations shall be transaction-based.
+(Supports FR-02, FR-03, FR-09)
+NFR-12: Consistent Transaction Handling
+All inventory and forecasting-related transactions shall be processed uniformly, ensuring that partial updates do not occur during failures or interruptions.
+(Supports FR-03, FR-07, FR-09)
+
+4 Use Case
+Inventory Item Creation (Add New Inventory Item)
+	•	A new inventory item record with necessary details like name, category, amount, reorder level, and supplier information can be created by an authorized user using the system. 
+	•	This feature guarantees that inventory tracking starts with reliable and consistent data.
+	•	Primary Actor: The user (store manager or inventory staff) who makes new inventory items.
+	•	Secondary actor: Includes the database, which keeps item records, and the system, which verifies and stores data.
+	•	Prerequisites:
+	•	The user is authorized and logged in (FR-06, NFR-01, NFR-03).
+	•	The inventory module is accessible. 
+	•	The supplier list and category list are pre-configured (or have default values).
+Basic Flow (Main Scenario)
+	•	The user accesses the Inventory Dashboard (FR-03).
+	•	The user selects "Add Item."
+	•	A form with the necessary fields (Item Name, Category, Quantity, Reorder Level, Supplier) is displayed by the system.
+	•	After completing the form, the user selects "Save."
+	•	Front-end validation is carried out by the system (necessary fields, numerical checks).
+	•	The item information is sent by the system to the server for validation.
+	•	The server verifies data rules (such as Quantity ≥ 0 and ReorderLevel ≥ 0).
+	•	The inventory record is created by the server in the database (inventory table).
+	•	The dashboard list displaying the new item is refreshed after the system verifies success.
+Alternative Flows:
+	•	Missing Required Field: The system inhibits submission by highlighting missing fields.
+	•	Invalid Quantity: The system displays an error and prevents saving if the quantity is negative or non-numeric.
+	•	Duplicate Item Name (Optional rule): The system alerts the user and recommends verifying the item's uniqueness
+	•	Unauthorized Attempt: The server rejects with access refused (NFR-03) if the user is not authorized.
+Postconditions:
+	•	The inventory item is successfully stored and accessible (Database Create).
+	•	The item is listed on the inventory dashboard.
+	•	The production of records is legitimate and consistent (NFR-11, NFR-12).
+Update Inventory Quantity (Stock on hand adjustment)
+	•	An authorized user can update the system's stock quantity to account for modifications brought about by sales, deliveries, adjustments, or corrections.
+	•	Modifications are recorded for historical tracking and auditing.
+	•	Main actor: User (store manager or inventory staff).
+	•	Secondary Players: Database, System, Audit Log
+Prerequisites:
+	•	The user has been verified (FR-06, NFR-01).
+	•	There is an inventory item in the system (FR-03).
+	•	The user is authorized to update the stock (NFR-03).
+Basic Flow (Main Scenario):
+	•	The Inventory Dashboard is opened by the user
+	•	The user chooses what item to update.
+	•	 The item details, including the current quantity, are shown by the system.
+	•	Depending on the UI design, the user inputs a new quantity (or adjustment amount).
+	•	The user selects "Update Stock."
+	•	The input is verified by the system (numeric, non-negative)
+	•	The server confirms authorization and validates update limitations
+	•	The database modifies the inventory record (Update operation); ix. The system logs the quantity, both old and new, with timestamp x in the inventory history.
+	•	The dashboard view is refreshed, and the system verifies the update.
+Alternative Flows:
+	•	Negative Quantity: The system displays "Quantity cannot be negative" and stops updates.
+	•	Item Not Found: The system displays "Item not found" if the item ID is invalid.
+	•	Concurrent Updates: The system asks the user to refresh and try again if another user updated the record first.
+	•	Database Error: If an update is unsuccessful, a safe error message is displayed by the system and no partial update takes place (transaction rollback).
+Postconditions:
+	•	The inventory quantity has been successfully updated.
+	•	For audit and traceability purposes, changes are recorded.
+	•	Data consistency is maintained (NFR-11, NFR-12).
+Generate Demand Forecast
+	•	The technique uses past sales data to estimate demand for products.
+	•	Decisions on inventory planning, including when and how much to restock, are supported by forecasting.
+	•	Primary Actor: Store Manager/Analyst
+	•	Secondary Actors: Database, System, ARIMA/LSTM Forecast Model
+Prerequisites:
+	•	The user is signed in (FR-06).
+	•	The chosen item has a sales history (SalesHistory data).
+	•	Forecast parameters (model, time) are accessible.
+Basic Flow (Main Scenario):
+	•	The user goes to the Forecasting area.
+	•	The user chooses an item, Model Type (ARIMA/LSTM), and Forecast Period (e.g., weekly/monthly).
+	•	The user selects "Generate Forecast."
+	•	Selection inputs are validated by the system
+	•	The server accesses the database to obtain past sales information for the chosen item.
+	•	The server preprocesses data, managing outliers when necessary, sorting, and missing dates.
+	•	The forecast model generates anticipated demand values.
+	•	The system saves forecast outputs with a timestamp in the ForecastResults table.
+	•	The system displays charts and anticipated values in the user interface.
+Alternative Flows:
+	•	Insufficient Historical Data: "Not enough data to generate forecast" is displayed by the system.
+	•	Model Processing Delay: The system displays a loading indicator; if the threshold is exceeded, a "Still processing" warning is displayed.
+	•	Forecast Model Failure: The system safely logs the error and returns a failure notice (no crash).
+	•	The system requires a valid period and denies submissions due to invalid period selection.
+Postconditions:
+	•	Forecast outcomes are produced and saved.
+	•	The forecast history allows the user to review the forecast.
+	•	There are performance limitations (NFR-05, NFR-06).
+	•	Forecast results must continue to be understandable and unambiguous (NFR-09).
+Compare Forecast vs Actual Demand
+	•	Over a predetermined period, the system contrasts projected demand with actual sales demand.
+	•	This facilitates assessment of forecast accuracy and upcoming model enhancements.
+	•	Main Actor: Manager/Analyst
+	•	Secondary Players: System, Database
+Prerequisites:
+	•	For the item and time, forecast results are available (ForecastResults).
+	•	For the same time span, actual sales data is available (SalesHistory).
+Basic Flow (Main Scenario):
+	•	The user chooses a comparative time and an item.
+	•	The user selects "Compare Forecast vs Actual."
+	•	The system retrieves forecast data from the database.
+	•	The system obtains real sales demand figures from the database.
+	•	Data is matched by time periods by the system (e.g., week number/month)
+	•	The system computes error metrics (difference, percentage error).
+	•	The system shows summary metrics and a comparison graphic.
+Alternative Flows:
+	•	"Actual data not available for comparison period" is displayed by the system when actual data is missing.
+	•	Forecast Not Found: The user is prompted to create a forecast first.
+	•	Mismatched Periods: The system modifies or asks the user to select a consistent time frame.
+Postconditions:
+	•	The forecast accuracy view appears.
+	•	Results aid in making decisions and improving forecasts.
+	•	Must continue to be clear and readable (NFR-09).
+	•	Consistent data processing must be maintained (NFR-12).
+View Low-Stock Alerts
+	•	Based on reorder levels, the system finds and highlights low-stock items for the user.
+	•	This lowers the danger of stockouts and promotes prompt replacement.
+	•	Primary Actor: User (Inventory Staff / Manager)
+	•	Secondary Players: System, Database
+Prerequisites:
+	•	Inventory items exist with reorder levels configured (FR-01, FR-02).
+	•	User has access to dashboard (FR-03).
+Basic Flow (Main Scenario):
+	•	The Inventory Dashboard is opened by the user
+	•	The system uses a database to retrieve the current stock and reorder levels.
+	•	Every item whose Quantity <= ReorderLevel is checked by the system
+	•	The system highlights and groups low-stock goods v. The user can filter to see "Low Stock Only"
+	•	The user has the option to update stock or place an external order.
+Alternative Flows: 
+	•	Reorder Level Not Set: The system uses the default threshold or displays a configuration prompt.
+	•	Big Inventory List: For readability, the system allows paging and filtering.
+	•	Permission Restriction: Low stock is view-only and cannot be edited if the user role is "Viewer" (NFR-03).
+Postconditions:
+	•	To lessen stockouts, low stock visibility is offered.
+	•	Response time on the dashboard is within specifications (NFR-04).
+	•	Supports the NFR-07 usability target for prompt decision-making.
+Basic Use Case Diagram created using Mermaid and prompt from ChatGPT, original ideas reflect to documentation:
+					Fig 1.1: Use-Case diagram
+
+
+
+
+5 Sequence Diagram - Overall System Interaction Flow
+Overview:
+	•	The entire interaction flow of the Smart Inventory & Demand Forecasting System is depicted in this sequence diagram.
+	•	It shows how users engage with the system, from demand forecasting and inventory management to authentication.
+	•	The sequence shows how the forecasting module, database, server logic, and user interface work together.
+	•	The flow enforces pertinent non-functional requirements (NFRs) and incorporates all essential functional requirements (FR-01 to FR-06).
+
+Actors and System Components:
+	•	User: A management or inventory employee running the system.
+	•	User Interface (UI): An input and output web-based interface.
+	•	Server/Backend: Manages orchestration, business logic, and validation.
+	•	Database: Holds forecasts, sales data, inventory information, and audit records.
+	•	Forecasting module: Demand forecasting models (ARIMA and LSTM) are executed.
+Prerequisites:
+	•	The system is available and functional.
+	•	The user's credentials are legitimate.
+	•	There are the necessary system data structures (sales history, inventories).
+Main Flow – System Interaction:
+User Authentication:
+	•	The system login page is accessed by the user.
+	•	The user inputs their login information.
+	•	The server receives authentication information from the user interface.
+	•	Credentials are verified by the server using user records that are saved.
+	•	After authentication is successful:
+	•	The creation of a user session
+	•	The dashboard is displayed to the user.
+	•	Access is blocked and an error message appears if authentication is unsuccessful.
+Inventory Dashboard Access:
+	•	The inventory dashboard is accessed by the verified user.
+	•	The user interface asks the server for inventory information.
+	•	Inventory records are retrieved from the database by the server.
+	•	Stock levels are compared to reorder thresholds by the server.
+	•	The user interface shows:
+	•	List of inventory items,
+	•	Current levels of inventory,
+	•	Low-stock items highlight.
+Inventory Item Creation:
+	•	The option to add a new inventory item is chosen by the user.
+	•	An input form appears in the user interface.
+	•	After entering item data, the user submits the form.
+	•	The server verifies authorization and input values.
+	•	A new inventory record is created in the database by the server.
+	•	The newly added item is included when the dashboard refreshes.
+Inventory Quantity Update:
+	•	A current inventory item is chosen by the user.
+	•	The user confirms the change after entering a new stock quantity.
+	•	The request is validated, and data limitations are examined by the server.
+	•	The database's inventory quantity is updated by the server.
+	•	The update is recorded by the server in the inventory history table.
+	•	The user interface verifies the update and updates the data that is shown.
+Demand Forecast Generation:
+	•	The forecasting area is accessed by the user.
+	•	The user chooses:
+	•	an item in stock,
+	•	predicting duration,
+	•	forecasting framework.
+	•	Forecast generating is started by the user.
+	•	The request is verified by the server.
+	•	The database contains past sales data that the server retrieves.
+	•	The data is preprocessed by the server.
+	•	Predicted demand values are produced by the forecasting module.
+	•	Forecast results are kept in the database by the server.
+	•	Charts and numerical summaries are used by the user interface to present forecast outputs.
+Forecast Evaluation:
+	•	The user asks for a comparison of actual and predicted demand.
+	•	Forecast and actual sales data are retrieved by the server.
+	•	Comparison metrics are computed by the server.
+	•	Accuracy indications and outcomes are shown side by side in the user interface.
+Alternative and Exception Scenario:
+	•	Authentication Failure: Access to the system is blocked by invalid credentials.
+	•	Incorrect Inventory Input: Inventory creation and modifications are prevented by missing or incorrect values.
+	•	Inadequate Sales Data: An informative message is sent to stop forecasting.
+	•	Concurrent Updates: Before attempting again, the user is asked to refresh the data.
+	•	When a system or database fails, safe error messages are displayed and transactions are rolled back.
+Quality and Design Considerations:
+	•	Authentication and authorization are necessary for every interaction (NFR-01, NFR-03).
+	•	Performance thresholds must be met by dashboard and inventory answers (NFR-04).
+	•	Forecast generation must be finished within predetermined parameters (NFR-05, NFR-06).
+	•	The system must guarantee transactional consistency and guard against data loss (NFR-11, NFR-12).
+	•	For non-technical users, outputs must be presented in an understandable manner (NFR-09).
+Summary:
+The entire operating workflow of the Smart Inventory & Demand Forecasting System is depicted in this sequence diagram. It shows how the main functions of the system work together smoothly, from forecasts to login. The design ensures congruence between functional objectives and non-functional quality traits by emphasizing strong validation, secure processing, and dependable data handling.
+Here is a Sequence Diagram created by using plantUML which prompts and ideas that relate with the documentation: Please zoom in for clear picture.
+
+			Fig 1.2: Sequence Diagram
+
+6 UI Design
+In terms of UI Design, we have created two prototypes for the upcoming project 2, we will carefully assess both the prototypes and select one for the final process, the tools we used to create the UI design were Figma and base44 generative AI. References has been taken and credits to the rightful owner, however, this UI design reflects our own ideas and brainstorming.
+This is the UI design created in Figma by our team leader and is direct reflection in her own creativity and ideas.
+
+
+					Fig 1.3: Login Page Figma prototype
+
+
+			Fig 1.4: Manager Dashboard Figma prototype
+
+
+
+
+
+
+
+
+
+
+
+
+This is the second design prototype. This will most likely be the design we will go for in the Capstone II. However, we might have some slight color and accent change during the process.
+ 
+Fig: 1.5: Dashboard
+Fig 1.6: Dashboard cont.
+
+Fig 1.7: Product Page
+Fig 1.8: Add new item.
+
+Fig 1.9: Warehouse Page
+
+Fig 2.0: Forecasting Page
+
+
+Fig 2.1: Forecasting Page cont.
+
+Fig 2.2: Reports Page
+
+Fig 2.3: Reports Page cont. 
+
+
+
+
+
+
+
+
+7 Resource Management
+The resources needed to successfully design and construct the Smart Inventory & Demand Forecasting System are described in this section. Resources are distributed based on the entire project lifecycle, from requirement analysis to system testing and deployment preparation, and are divided into four categories: human, technical, data, and time. Alignment with project objectives, risk reduction, and efficient progress are all ensured by effective resource planning.
+Human Resources
+Roles and Responsibility
+	•	Project Coordinator: 	Oversees the execution of the project at every stage, controls timetable, plans team activities, and guarantees compliance with the goals and scope of the system.
+	•	Requirements Analyst: Determines system requirements, evaluates business needs, and makes ensuring that functional and non-functional requirements are traceable throughout the development process.
+	•	System / Backend Designer: Creates database interactions, server-side logic, system design, and guarantees dependable system component integration.
+	•	Data & Forecasting Analyst: Ensures that forecasting results support inventory decisions by designing and validating demand forecasting workflows using ARIMA/LSTM models.
+	•	UI/UX Designer: Ensures usability, accessibility, and consistent interaction flows while designing user interfaces for forecasting and inventory management views.
+	•	Quality Assurance Reviewer: Examines system logic, verifies requirements against implementation strategies, and makes that performance, security, and dependability needs are satisfied.
+Software and Tools:
+Resource
+Purpose
+Development Environment (IDE)
+Used in the development stages for the design and implementation of system components.
+Mermaid
+Brainstorming and creation of use case diagram.
+PlantUML
+Creation of Sequence Diagram.
+Database Design Tools
+Used to create and verify database schemas for sales, inventory, and forecasting information.
+Version Control System
+Oversees system artifacts, design modifications, and cooperative development across project stages.
+
+Data Resources:
+	•	Inventory Data: Represents supplier details, reorder thresholds, stock levels, and product information used in inventory management.
+	•	Sales History Data: Gives the historical demand data needed to train and run forecasting models.
+	•	Forecast Results Data: Stores anticipated demand figures for assessment and decision-making.
+Time Resources:
+This represents the Time duration according to Project Phase and its Description:
+Week 0-1: Project initiation and requirement analysis
+Stakeholder analysis, requirement specification, system scope determination, and inventory and forecasting difficulties.
+Week 1-2: System Design and architecture planning
+System architecture, database schema, client-server communication, and forecasting integration strategy design.
+Week 2-3: Inventory management module development
+Creation of core inventory features, such as low-stock detection, stock updates, and item management.
+Week 3-4: Demand forecasting module development:
+Time-series models are used to implement forecasting logic, including prediction formulation and data pretreatment.
+Week 4-5: System integration and interaction modelling
+Validation of end-to-end workflows and integration of forecasting and inventory modules.
+Week 5-6: Testing, evaluation, and refinement
+Functional testing, performance validation, forecasting accuracy assessment, and problem solving.
+Week 6-7: Deployment preparation and final review
+Final system evaluation, readiness assessments, and deployment or handover readiness.
+To guarantee that fundamental tasks like requirement analysis and system design are finished before implementation and testing, time resources are distributed according to logical interdependence between phases.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+8 Pseudocode
+The following pseudocode are provided for the core features of our project Smart Inventory and Demand Forecasting Systems. The pseudocode given consists of clean, consistent style with functions, conditionals, loops, and clear comments.
+
+	•	User Login and Role Based Access:
+
+
+
+
+
+
+
+
+
+
+
+
+	•	Add New Inventory Item:
+
+	•	Low-Stock Alert Generation
+
+
+
+
+
+
+
+
+
+	•	Update Inventory Quantity with Audit Trail 
+
+
+	•	Generate Demand Forecast
+
+
+
+
+
+
+	•	Compare Forecast vs Actual
+
+
+
+
+
+
+
+
+
+9 Risk Management and Mitigation
+Risk ID
+Risk Description
+Likelihood
+Impact
+R1
+Demand projections that are inaccurate because of inadequate or poor-quality historical sales data
+Medium
+High
+R2
+When forecasting models are integrated with inventory operations, the system becomes more complex.
+Medium
+Medium
+R3
+Forecasting generation for large datasets may result in performance issues.
+Low
+High
+R4
+Security flaws that allow unauthorized access to forecasts or inventory data
+Low
+High
+R5
+Delays or insufficient core functioning due to scope creep
+Medium
+Medium
+R6
+Insufficient team experience in using forecasting models like LSTM or ARIMA
+Medium
+Medium
+R7
+Integration issues between system components (UI, server, database)
+Low
+Medium
+
+10 Mitigation corresponding to Risks, matched using Risk ID.
+	•	R1: Before predicting, confirm the minimal data requirements, use data preparation methods, and alert users when there is not enough data.
+	•	R2: Employ a modular system design that divides the forecasting and inventory components; specify the interfaces between the modules.
+	•	R3: Establish performance limitations for forecasting activities, limit the forecast horizon, and optimize data processing.
+	•	R4: Adopt secure data handling procedures, role-based access control, and authentication.
+	•	R5: Use MoSCoW classification to prioritize requirements and clearly specify features that are in-scope and out-of-scope.
+	•	R6: Use simplified model assumptions, carry out preliminary research, and prioritize conceptual integration over optimization.
+	•	R7: Use sequence diagrams to verify data flow and carry out gradual integration testing.
+
+
+
+
+11 Timeline:
+This is the timeline that corresponds our work and dates with stakeholders. It is made using free version of ganttPRO.
+
+This timeline consists of our work for both documentations and thus will be used to keep track of timeline in project 2, NIT3004.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+12 Conclusion:
+To solve significant inefficiencies in conventional inventory management techniques, this project proposal has provided a thorough architecture for a Smart Inventory & Demand Forecasting System. The suggested system aims to enable proactive decision-making, decrease stockouts and overstocking, and enhance overall operational efficiency by combining intelligent demand forecasting with real-time inventory tracking.  The proposal recognized current market constraints, provided a clear definition of the project's environment, and outlined well-organized goals and objectives that specifically fill in the gaps. To ensure clarity and viability for future implementation, comprehensive functional requirements were created to characterize the behavior of the system from front-end, server-end, and database perspectives. Furthermore, the system's quality and resilience were guaranteed by precisely defined non-functional requirements that set quantifiable norms for security, performance, usability, and dependability.
+Use cases and sequence diagrams were used to describe important system interactions, showcasing a deep comprehension of user workflows, backend processing, and data flow throughout the system. While UI design considerations focused on usability and accessibility for non-technical users, pseudocode further reinforced the logical structure of key functions. The sections on resource management and risk management demonstrated the project's feasibility and preparedness for implementation by offering proactive mitigation techniques and reasonable planning assumptions.
+In conclusion, this plan lays a strong basis for the Smart Inventory & Demand Forecasting System's successful development. The system is positioned as a scalable and efficient solution for contemporary inventory difficulties because to its intelligent forecasting capabilities and structured design approach. Additionally, there are numerous options for future improvement in the suggested architecture, such as model optimization, automation of replenishment decisions, and interaction with external corporate systems.
+
+
+
+
+13 References‌
+Oca, A., Alicke, K., & Somekh, A. (2025, April 17). Beyond automation: How gen AI is reshaping supply chains. McKinsey & Company. https://www.mckinsey.com/capabilities/operations/our-insights/beyond-automation-how-gen-ai-is-reshaping-supply-chains 
+Time Series Analysis: Forecasting and Control, 5th Edition | Wiley. (n.d.). Wiley.com. https://www.wiley.com/en-us/Time+Series+Analysis%3A+Forecasting+and+Control%2C+5th+Edition-p-9781118675021 
+‌Hochreiter, S., & Schmidhuber, J. (1997). Long Short-Term Memory. Neural Computation, 9(8), 1735–1780. https://doi.org/10.1162/neco.1997.9.8.1735 
+McKinsey & Company. (2022). The value of AI in supply chain management.
+https://www.mckinsey.com/capabilities/operations/our-insights
+OpenAI. (2025). ChatGPT. ChatGPT; OpenAI. https://chatgpt.com/ 
+GanttPRO. (n.d.). Online Gantt chart maker for project planning. https://app.ganttpro.com/#/project/1769944623820/export 
+PlantUML. (n.d.). Sequence Diagram syntax and features. PlantUML.com. https://plantuml.com/sequence-diagram 
+Mermaid. (n.d.). Diagramming and Charting Tool. https://mermaid.js.org/ 
+Former_Member. (2021, December 2). SAP Inventory Management Tutorial for First-Timers. SAP Community. https://community.sap.com/t5/supply-chain-management-blog-posts-by-members/sap-inventory-management-tutorial-for-first-timers/ba-p/13518565 
+Web Content Accessibility Guidelines (WCAG) 2.1. (2025, May 6). https://www.w3.org/TR/WCAG21/ 
+ISO 9241-210:2019. (n.d.). ISO. https://www.iso.org/standard/77520.html 
+Chen, H., Chiang, R. H. L., & Storey, V. C. (2012). Business intelligence and analytics: From big data to big impact. MIS Quarterly, 36(4), 1165–1188. https://doi.org/10.2307/41703503
+Makridakis, S., Spiliotis, E., & Assimakopoulos, V. (2018). Statistical and Machine Learning forecasting methods: Concerns and ways forward. PLoS ONE, 13(3), e0194889. https://doi.org/10.1371/journal.pone.0194889 
+Oracle. (2023). Inventory Management Cloud | Oracle. (n.d.). https://www.oracle.com/scm/inventory-management/ 
+
+
+
+
+
+
+
+
+
