@@ -125,3 +125,4 @@ dist
 # SQLite databases
 *.sqlite
 *.db
+token.json

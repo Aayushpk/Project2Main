@@ -26,14 +26,15 @@ db.serialize(() => {
     suppliedDate TEXT
   )`);
 
-  // InventoryHistory
+  // InventoryHistory (Movement Log)
   db.run(`CREATE TABLE IF NOT EXISTS InventoryHistory (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    itemId INTEGER NOT NULL,
-    oldQuantity INTEGER NOT NULL,
-    newQuantity INTEGER NOT NULL,
-    updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY(itemId) REFERENCES Inventory(id)
+    itemId INTEGER,
+    itemName TEXT,
+    sku TEXT,
+    eventType TEXT NOT NULL,
+    quantityChange INTEGER NOT NULL,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
   )`);
 
   // SalesHistory

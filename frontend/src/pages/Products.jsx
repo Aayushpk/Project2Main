@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import api from '../api';
-import { Plus, Edit2, Check, X } from 'lucide-react';
+import { Plus, Edit2, Check, X, Trash2 } from 'lucide-react';
 
 export default function Products() {
   const [inventory, setInventory] = useState([]);
@@ -13,8 +13,14 @@ export default function Products() {
     itemName: '', sku: '', category: '', price: '', quantity: '', reorderLevel: '', supplier: ''
   });
 
+  const [deleteConfirmationId, setDeleteConfirmationId] = useState(null);
+
   useEffect(() => {
     fetchInventory();
+
+    const handleUpdate = () => fetchInventory();
+    window.addEventListener('inventoryUpdated', handleUpdate);
+    return () => window.removeEventListener('inventoryUpdated', handleUpdate);
   }, []);
 
   const fetchInventory = async () => {
@@ -23,6 +29,16 @@ export default function Products() {
       setInventory(response.data);
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await api.delete(`/inventory/${id}`);
+      setDeleteConfirmationId(null);
+      fetchInventory();
+    } catch (err) {
+      alert(err.response?.data?.error || "Error deleting item");
     }
   };
 
@@ -117,12 +133,20 @@ export default function Products() {
                         <button onClick={() => setEditingId(null)} className="text-red-600 hover:text-red-900"><X size={18}/></button>
                       </>
                     ) : (
-                      <button 
-                        onClick={() => { setEditingId(item.id); setEditQuantity(item.quantity); }} 
-                        className="text-blue-600 hover:text-blue-900"
-                      >
-                        <Edit2 size={18}/>
-                      </button>
+                      <>
+                        <button 
+                          onClick={() => { setEditingId(item.id); setEditQuantity(item.quantity); }} 
+                          className="text-blue-600 hover:text-blue-900"
+                        >
+                          <Edit2 size={18}/>
+                        </button>
+                        <button 
+                          onClick={() => setDeleteConfirmationId(item.id)} 
+                          className="text-red-600 hover:text-red-900"
+                        >
+                          <Trash2 size={18}/>
+                        </button>
+                      </>
                     )}
                   </td>
                 </tr>
@@ -159,6 +183,19 @@ export default function Products() {
                 <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Save Product</button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+      {/* Delete Confirmation Modal */}
+      {deleteConfirmationId && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-sm">
+            <h3 className="text-lg font-bold text-gray-900 mb-2">Delete Product</h3>
+            <p className="text-gray-600 mb-6">Are you sure you want to delete this product? This will also delete all associated sales and forecasting history. This action cannot be undone.</p>
+            <div className="flex justify-end gap-3">
+              <button onClick={() => setDeleteConfirmationId(null)} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md font-medium">Cancel</button>
+              <button onClick={() => handleDelete(deleteConfirmationId)} className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-medium">Delete</button>
+            </div>
           </div>
         </div>
       )}

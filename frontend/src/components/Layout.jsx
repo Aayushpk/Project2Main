@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Package, Warehouse, LineChart, FileText, LogOut } from 'lucide-react';
+import { LayoutDashboard, Package, Warehouse, LineChart, FileText, LogOut, ShoppingCart } from 'lucide-react';
+import SaleSimulatorModal from './SaleSimulatorModal';
 
 const SidebarItem = ({ icon: Icon, label, path, isActive }) => (
   <Link 
@@ -18,6 +20,7 @@ const SidebarItem = ({ icon: Icon, label, path, isActive }) => (
 export default function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [isSimulatorOpen, setIsSimulatorOpen] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -69,10 +72,19 @@ export default function Layout() {
           <h2 className="text-xl font-semibold text-gray-800 capitalize">
             {location.pathname === '/' ? 'Dashboard' : location.pathname.substring(1)}
           </h2>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-500">Welcome, {localStorage.getItem('username')}</span>
-            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
-              {localStorage.getItem('username')?.charAt(0).toUpperCase()}
+          <div className="flex items-center gap-6">
+            <button
+              onClick={() => setIsSimulatorOpen(true)}
+              className="flex items-center gap-2 px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-md hover:bg-indigo-100 transition-colors font-medium text-sm border border-indigo-200"
+            >
+              <ShoppingCart size={16} />
+              Simulate Sale
+            </button>
+            <div className="flex items-center gap-3 border-l pl-6">
+              <span className="text-sm text-gray-500">Welcome, {localStorage.getItem('username')}</span>
+              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
+                {localStorage.getItem('username')?.charAt(0).toUpperCase()}
+              </div>
             </div>
           </div>
         </header>
@@ -81,6 +93,11 @@ export default function Layout() {
           <Outlet />
         </div>
       </main>
+
+      <SaleSimulatorModal 
+        isOpen={isSimulatorOpen} 
+        onClose={() => setIsSimulatorOpen(false)} 
+      />
     </div>
   );
 }

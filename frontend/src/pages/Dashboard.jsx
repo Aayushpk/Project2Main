@@ -8,6 +8,10 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchInventory();
+
+    const handleUpdate = () => fetchInventory();
+    window.addEventListener('inventoryUpdated', handleUpdate);
+    return () => window.removeEventListener('inventoryUpdated', handleUpdate);
   }, []);
 
   const fetchInventory = async () => {

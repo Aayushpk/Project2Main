@@ -4,6 +4,7 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Products from './pages/Products';
 import Forecasting from './pages/Forecasting';
+import Reports from './pages/Reports';
 
 const ProtectedLayout = () => {
   const isAuthenticated = !!localStorage.getItem('token');
@@ -23,7 +24,7 @@ function App() {
           <Route path="forecasting" element={<Forecasting />} />
           {/* Mock routes for UI completeness */}
           <Route path="warehouses" element={<div className="p-8"><h1 className="text-2xl font-bold">Warehouses (Placeholder)</h1></div>} />
-          <Route path="reports" element={<div className="p-8"><h1 className="text-2xl font-bold">Reports (Placeholder)</h1></div>} />
+          <Route path="reports" element={<Reports />} />
         </Route>
       </Routes>
     </BrowserRouter>
