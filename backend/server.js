@@ -23,6 +23,16 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
+// Role Middleware — pass allowed roles as arguments
+const requireRole = (...roles) => {
+  return (req, res, next) => {
+    if (!req.user || !roles.includes(req.user.role)) {
+      return res.status(403).json({ error: "Access denied. Insufficient permissions." });
+    }
+    next();
+  };
+};
+
 // 1. Authentication Route (FR-01)
 app.post('/api/login', (req, res) => {
   const { username, password } = req.body;
@@ -39,6 +49,7 @@ app.post('/api/login', (req, res) => {
 });
 
 // 2. Inventory Routes (FR-02, FR-03, FR-04, FR-08, FR-09)
+// GET — all authenticated users can view inventory
 app.get('/api/inventory', authenticateToken, (req, res) => {
   db.all("SELECT * FROM Inventory", (err, rows) => {
     if (err) return res.status(500).json({ error: err.message });
@@ -53,7 +64,8 @@ app.get('/api/inventory', authenticateToken, (req, res) => {
   });
 });
 
-app.post('/api/inventory', authenticateToken, (req, res) => {
+// POST — admin only
+app.post('/api/inventory', authenticateToken, requireRole('admin'), (req, res) => {
   const { itemName, sku, category, price, quantity, reorderLevel, supplier, suppliedDate } = req.body;
   db.run(
     `INSERT INTO Inventory (itemName, sku, category, price, quantity, reorderLevel, supplier, suppliedDate)
@@ -69,7 +81,8 @@ app.post('/api/inventory', authenticateToken, (req, res) => {
   );
 });
 
-app.put('/api/inventory/:id', authenticateToken, (req, res) => {
+// PUT — admin only
+app.put('/api/inventory/:id', authenticateToken, requireRole('admin'), (req, res) => {
   const { id } = req.params;
   const { quantity } = req.body; // updated quantity
 
@@ -92,8 +105,8 @@ app.put('/api/inventory/:id', authenticateToken, (req, res) => {
   });
 });
 
-// DELETE /api/inventory/:id (FR-02)
-app.delete('/api/inventory/:id', authenticateToken, (req, res) => {
+// DELETE /api/inventory/:id — admin only
+app.delete('/api/inventory/:id', authenticateToken, requireRole('admin'), (req, res) => {
   const { id } = req.params;
   
   db.get("SELECT itemName, sku, quantity FROM Inventory WHERE id = ?", [id], (err, row) => {
@@ -120,8 +133,8 @@ app.delete('/api/inventory/:id', authenticateToken, (req, res) => {
   });
 });
 
-// POST /api/sales (FR-05)
-app.post('/api/sales', authenticateToken, (req, res) => {
+// POST /api/sales — admin only (FR-05)
+app.post('/api/sales', authenticateToken, requireRole('admin'), (req, res) => {
   const { itemId, quantitySold } = req.body;
   
   if (!itemId || !quantitySold || quantitySold <= 0) {
@@ -164,8 +177,8 @@ app.post('/api/sales', authenticateToken, (req, res) => {
   });
 });
 
-// GET /api/reports (FR-05, Fig 2.2/2.3)
-app.get('/api/reports', authenticateToken, (req, res) => {
+// GET /api/reports — admin only (FR-05, Fig 2.2/2.3)
+app.get('/api/reports', authenticateToken, requireRole('admin'), (req, res) => {
   const reportsData = {};
   
   db.serialize(() => {
@@ -192,9 +205,8 @@ app.get('/api/reports', authenticateToken, (req, res) => {
   });
 });
 
-// 3. Forecasting Routes (FR-06, FR-07)
-// Simulate ARIMA/LSTM with a simple moving average algorithm over the past data
-app.post('/api/forecast', authenticateToken, (req, res) => {
+// 3. Forecasting Routes — admin only (FR-06, FR-07)
+app.post('/api/forecast', authenticateToken, requireRole('admin'), (req, res) => {
   const { itemId, periodDays = 7 } = req.body;
 
   // Get sales history for the item
@@ -203,12 +215,9 @@ app.post('/api/forecast', authenticateToken, (req, res) => {
     if (sales.length === 0) return res.status(400).json({ error: "Not enough historical data to generate forecast" });
 
     // Simulate simple moving average as a proxy for the heavy ML model
-    // Calculate average daily sales over the available history
     const totalSold = sales.reduce((sum, record) => sum + record.quantitySold, 0);
     const averageDaily = totalSold / sales.length;
 
-    // The "predicted demand" for the upcoming period is the average daily * periodDays
-    // We add a tiny bit of random variation to simulate a real model's output
     const predictedDemand = Math.max(1, Math.round(averageDaily * periodDays * (0.9 + Math.random() * 0.2)));
 
     const periodStr = `${periodDays} days`;
@@ -228,7 +237,7 @@ app.post('/api/forecast', authenticateToken, (req, res) => {
   });
 });
 
-app.get('/api/forecast/compare/:itemId', authenticateToken, (req, res) => {
+app.get('/api/forecast/compare/:itemId', authenticateToken, requireRole('admin'), (req, res) => {
   const { itemId } = req.params;
 
   // Get latest forecast
@@ -245,6 +254,89 @@ app.get('/api/forecast/compare/:itemId', authenticateToken, (req, res) => {
         actualSales: sales.reverse() // chronological order
       });
     });
+  });
+});
+
+// ============================================================
+// 4. Supplier Routes — Reorder Requests
+// ============================================================
+
+// GET reorder requests (low-stock items) — supplier and admin
+app.get('/api/reorder-requests', authenticateToken, requireRole('admin', 'supplier'), (req, res) => {
+  db.all("SELECT * FROM Inventory WHERE quantity <= reorderLevel", (err, rows) => {
+    if (err) return res.status(500).json({ error: err.message });
+    
+    const requests = rows.map(item => ({
+      id: item.id,
+      itemName: item.itemName,
+      sku: item.sku,
+      category: item.category,
+      currentStock: item.quantity,
+      reorderLevel: item.reorderLevel,
+      suggestedReorder: Math.max(item.reorderLevel * 2 - item.quantity, item.reorderLevel),
+      supplier: item.supplier,
+      status: item.quantity === 0 ? 'Critical' : 'Low Stock'
+    }));
+    
+    res.json(requests);
+  });
+});
+
+// GET products supplied — supplier and admin
+app.get('/api/products-supplied', authenticateToken, requireRole('admin', 'supplier'), (req, res) => {
+  db.all("SELECT * FROM Inventory ORDER BY supplier, itemName", (err, rows) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(rows);
+  });
+});
+
+// ============================================================
+// 5. Client Routes — Product Catalogue & Requests
+// ============================================================
+
+// GET product catalogue — client (read-only view of available products)
+app.get('/api/catalogue', authenticateToken, requireRole('admin', 'client'), (req, res) => {
+  db.all("SELECT id, itemName, sku, category, price, quantity FROM Inventory WHERE quantity > 0 ORDER BY category, itemName", (err, rows) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(rows);
+  });
+});
+
+// POST client request — client only
+app.post('/api/client-requests', authenticateToken, requireRole('client'), (req, res) => {
+  const { itemId, quantity } = req.body;
+  const clientUsername = req.user.username;
+
+  if (!itemId || !quantity || quantity <= 0) {
+    return res.status(400).json({ error: "Invalid item or quantity" });
+  }
+
+  db.get("SELECT id, itemName, quantity as stock FROM Inventory WHERE id = ?", [itemId], (err, item) => {
+    if (err) return res.status(500).json({ error: err.message });
+    if (!item) return res.status(404).json({ error: "Product not found" });
+    if (quantity > item.stock) return res.status(400).json({ error: "Requested quantity exceeds available stock" });
+
+    db.run(
+      "INSERT INTO ClientRequests (clientUsername, itemId, itemName, quantity) VALUES (?, ?, ?, ?)",
+      [clientUsername, itemId, item.itemName, quantity],
+      function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ id: this.lastID, message: "Request submitted successfully" });
+      }
+    );
+  });
+});
+
+// GET client requests — client sees own, admin sees all
+app.get('/api/client-requests', authenticateToken, requireRole('admin', 'client'), (req, res) => {
+  const query = req.user.role === 'admin'
+    ? "SELECT * FROM ClientRequests ORDER BY createdAt DESC"
+    : "SELECT * FROM ClientRequests WHERE clientUsername = ? ORDER BY createdAt DESC";
+  const params = req.user.role === 'admin' ? [] : [req.user.username];
+
+  db.all(query, params, (err, rows) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(rows);
   });
 });
 

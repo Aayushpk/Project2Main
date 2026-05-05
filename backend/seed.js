@@ -4,6 +4,8 @@ const bcrypt = require('bcryptjs');
 const seedData = async () => {
   console.log("Seeding data...");
   const adminPassword = await bcrypt.hash('admin123', 10);
+  const supplierPassword = await bcrypt.hash('supplier123', 10);
+  const clientPassword = await bcrypt.hash('client123', 10);
 
   db.serialize(() => {
     // Clear existing data
@@ -13,8 +15,10 @@ const seedData = async () => {
     db.run("DELETE FROM Inventory");
     db.run("DELETE FROM Users");
 
-    // Seed Admin User
+    // Seed Users
     db.run("INSERT INTO Users (username, passwordHash, role) VALUES (?, ?, ?)", ['admin', adminPassword, 'admin']);
+    db.run("INSERT INTO Users (username, passwordHash, role) VALUES (?, ?, ?)", ['supplier', supplierPassword, 'supplier']);
+    db.run("INSERT INTO Users (username, passwordHash, role) VALUES (?, ?, ?)", ['client', clientPassword, 'client']);
 
     // Seed Inventory Items
     db.run(`INSERT INTO Inventory (id, itemName, sku, category, price, quantity, reorderLevel, supplier, suppliedDate) VALUES

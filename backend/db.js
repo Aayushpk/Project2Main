@@ -55,6 +55,18 @@ db.serialize(() => {
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(itemId) REFERENCES Inventory(id)
   )`);
+
+  // ClientRequests
+  db.run(`CREATE TABLE IF NOT EXISTS ClientRequests (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    clientUsername TEXT NOT NULL,
+    itemId INTEGER NOT NULL,
+    itemName TEXT NOT NULL,
+    quantity INTEGER NOT NULL,
+    status TEXT NOT NULL DEFAULT 'pending',
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(itemId) REFERENCES Inventory(id)
+  )`);
 });
 
 module.exports = db;
