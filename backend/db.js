@@ -52,9 +52,15 @@ db.serialize(() => {
     itemId INTEGER NOT NULL,
     period TEXT NOT NULL,
     predictedDemand INTEGER NOT NULL,
+    forecastMeta TEXT,
     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(itemId) REFERENCES Inventory(id)
   )`);
+
+  // Migration: add forecastMeta column if missing (safe for existing databases)
+  db.run(`ALTER TABLE ForecastResults ADD COLUMN forecastMeta TEXT`, (err) => {
+    // Ignore "duplicate column" errors — means column already exists
+  });
 
   // ClientRequests
   db.run(`CREATE TABLE IF NOT EXISTS ClientRequests (

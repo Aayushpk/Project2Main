@@ -206,55 +206,73 @@ app.get('/api/reports', authenticateToken, requireRole('admin'), (req, res) => {
 });
 
 // 3. Forecasting Routes — admin only (FR-06, FR-07)
-app.post('/api/forecast', authenticateToken, requireRole('admin'), (req, res) => {
-  const { itemId, periodDays = 7 } = req.body;
+// Uses the dedicated forecastService for real calculations
+const forecastService = require('./services/forecastService');
 
-  // Get sales history for the item
-  db.all("SELECT quantitySold, saleDate FROM SalesHistory WHERE itemId = ? ORDER BY saleDate ASC", [itemId], (err, sales) => {
-    if (err) return res.status(500).json({ error: err.message });
-    if (sales.length === 0) return res.status(400).json({ error: "Not enough historical data to generate forecast" });
+// POST /api/forecast/generate — generate forecast for one or all items
+app.post('/api/forecast/generate', authenticateToken, requireRole('admin'), async (req, res) => {
+  try {
+    const { itemId, periodDays = 7 } = req.body;
 
-    // Simulate simple moving average as a proxy for the heavy ML model
-    const totalSold = sales.reduce((sum, record) => sum + record.quantitySold, 0);
-    const averageDaily = totalSold / sales.length;
-
-    const predictedDemand = Math.max(1, Math.round(averageDaily * periodDays * (0.9 + Math.random() * 0.2)));
-
-    const periodStr = `${periodDays} days`;
-
-    // Save forecast
-    db.run("INSERT INTO ForecastResults (itemId, period, predictedDemand) VALUES (?, ?, ?)", [itemId, periodStr, predictedDemand], function (err) {
-      if (err) return res.status(500).json({ error: err.message });
-
+    if (itemId) {
+      // Single item forecast
+      const result = await forecastService.generateItemForecast(itemId, parseInt(periodDays));
+      res.json({ message: "Forecast generated successfully", forecast: result });
+    } else {
+      // Batch forecast for all items
+      const { results, errors } = await forecastService.generateAllForecasts(parseInt(periodDays));
       res.json({
-        id: this.lastID,
-        itemId,
-        period: periodStr,
-        predictedDemand,
-        message: "Forecast generated successfully"
+        message: `Forecasts generated for ${results.length} items`,
+        total: results.length,
+        errors: errors.length,
+        forecasts: results,
+        errorDetails: errors
       });
-    });
-  });
+    }
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
 });
 
-app.get('/api/forecast/compare/:itemId', authenticateToken, requireRole('admin'), (req, res) => {
-  const { itemId } = req.params;
+// GET /api/forecast/summary — latest forecast for every item with risk breakdown
+app.get('/api/forecast/summary', authenticateToken, requireRole('admin'), async (req, res) => {
+  try {
+    const summary = await forecastService.getForecastSummary();
+    res.json(summary);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
-  // Get latest forecast
-  db.get("SELECT * FROM ForecastResults WHERE itemId = ? ORDER BY createdAt DESC LIMIT 1", [itemId], (err, forecast) => {
-    if (err) return res.status(500).json({ error: err.message });
-    if (!forecast) return res.status(404).json({ error: "No forecast found for this item. Generate one first." });
+// GET /api/forecast/recommendations — items at risk sorted by severity
+app.get('/api/forecast/recommendations', authenticateToken, requireRole('admin'), async (req, res) => {
+  try {
+    const recs = await forecastService.getRecommendations();
+    res.json(recs);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
-    // Get actual sales (aggregate for display)
-    db.all("SELECT quantitySold, saleDate FROM SalesHistory WHERE itemId = ? ORDER BY saleDate DESC LIMIT 30", [itemId], (err, sales) => {
-      if (err) return res.status(500).json({ error: err.message });
+// GET /api/forecast/compare/:itemId — chart data for one item
+app.get('/api/forecast/compare/:itemId', authenticateToken, requireRole('admin'), async (req, res) => {
+  try {
+    const data = await forecastService.getComparisonData(req.params.itemId);
+    res.json(data);
+  } catch (err) {
+    res.status(err.message.includes('No forecast') ? 404 : 500).json({ error: err.message });
+  }
+});
 
-      res.json({
-        forecast,
-        actualSales: sales.reverse() // chronological order
-      });
-    });
-  });
+// Legacy endpoint — redirect to new generate endpoint
+app.post('/api/forecast', authenticateToken, requireRole('admin'), async (req, res) => {
+  try {
+    const { itemId, periodDays = 7 } = req.body;
+    const result = await forecastService.generateItemForecast(itemId, parseInt(periodDays));
+    res.json(result);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
 });
 
 // ============================================================
