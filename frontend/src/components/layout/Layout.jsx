@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, Package, Warehouse, LineChart, FileText, LogOut, ShoppingCart, RefreshCw, Truck, BookOpen, ClipboardList } from 'lucide-react';
-import SaleSimulatorModal from './common/SaleSimulatorModal';
+import SaleSimulatorModal from '../common/SaleSimulatorModal';
 
 const SidebarItem = ({ icon: Icon, label, path, isActive }) => (
   <Link 
@@ -24,8 +24,8 @@ const menuConfigs = {
     { icon: Package, label: 'Products', path: '/products' },
     { icon: LineChart, label: 'Forecasting', path: '/forecasting' },
     { icon: FileText, label: 'Reports', path: '/reports' },
-    { icon: ClipboardList, label: 'Order Management', path: '/orders' },
-    { icon: RefreshCw, label: 'Reorder Management', path: '/reorders' },
+    { icon: ShoppingCart, label: 'Order Management', path: '/order-management' },
+    { icon: RefreshCw, label: 'Reorder Management', path: '/reorder-management' },
   ],
   supplier: [
     { icon: LayoutDashboard, label: 'Supplier Dashboard', path: '/supplier' },
@@ -37,6 +37,7 @@ const menuConfigs = {
     { icon: BookOpen, label: 'Product Catalogue', path: '/client/catalogue' },
     { icon: ShoppingCart, label: 'Cart', path: '/client/cart' },
     { icon: ClipboardList, label: 'My Orders', path: '/client/orders' },
+    { icon: ClipboardList, label: 'My Requests', path: '/client/my-requests' },
   ],
 };
 

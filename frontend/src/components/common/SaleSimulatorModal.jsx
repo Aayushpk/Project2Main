@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { X, ShoppingCart } from 'lucide-react';
-import api from '../api';
+import api from '../../api';
 
 export default function SaleSimulatorModal({ isOpen, onClose }) {
   const [inventory, setInventory] = useState([]);

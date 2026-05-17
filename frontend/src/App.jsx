@@ -1,17 +1,21 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
-import ProtectedRoute from './components/ProtectedRoute';
+import ProtectedRoute from './components/common/ProtectedRoute';
 import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
-import Products from './pages/Products';
-import Forecasting from './pages/Forecasting';
-import Reports from './pages/Reports';
-import SupplierDashboard from './pages/SupplierDashboard';
-import ReorderRequests from './pages/ReorderRequests';
-import ProductsSupplied from './pages/ProductsSupplied';
-import ClientDashboard from './pages/ClientDashboard';
-import ProductCatalogue from './pages/ProductCatalogue';
-import MyRequests from './pages/MyRequests';
+import Dashboard from './pages/admin/Dashboard';
+import Products from './pages/admin/Products';
+import Forecasting from './pages/admin/Forecasting';
+import Reports from './pages/admin/Reports';
+import SupplierDashboard from './pages/supplier/SupplierDashboard';
+import ReorderRequests from './pages/supplier/ReorderRequests';
+import ProductsSupplied from './pages/supplier/ProductsSupplied';
+import ClientDashboard from './pages/client/ClientDashboard';
+import ProductCatalogue from './pages/client/ProductCatalogue';
+import MyRequests from './pages/client/MyRequests';
+import Cart from './pages/client/Cart';
+import MyOrders from './pages/client/MyOrders';
+import OrderManagement from './pages/admin/OrderManagement';
+import ReorderManagement from './pages/admin/ReorderManagement';
 
 function App() {
   return (
@@ -28,8 +32,9 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="products" element={<Products />} />
           <Route path="forecasting" element={<Forecasting />} />
-          <Route path="warehouses" element={<div className="p-8"><h1 className="text-2xl font-bold">Warehouses (Placeholder)</h1></div>} />
           <Route path="reports" element={<Reports />} />
+          <Route path="orders" element={<OrderManagement />} />
+          <Route path="reorders" element={<ReorderManagement />} />
         </Route>
 
         {/* Supplier Routes */}
@@ -51,6 +56,8 @@ function App() {
         }>
           <Route index element={<ClientDashboard />} />
           <Route path="catalogue" element={<ProductCatalogue />} />
+          <Route path="cart" element={<Cart />} />
+          <Route path="orders" element={<MyOrders />} />
           <Route path="my-requests" element={<MyRequests />} />
         </Route>
 

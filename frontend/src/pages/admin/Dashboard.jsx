@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
-import api from '../api';
+import { useNavigate } from 'react-router-dom';
+import api from '../../api';
 import { Package, AlertTriangle, TrendingUp, DollarSign } from 'lucide-react';
 
 export default function Dashboard() {
   const [inventory, setInventory] = useState([]);
+  const [salesGrowth, setSalesGrowth] = useState(0);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchInventory();
@@ -16,8 +19,12 @@ export default function Dashboard() {
 
   const fetchInventory = async () => {
     try {
-      const response = await api.get('/inventory');
-      setInventory(response.data);
+      const [invResponse, growthResponse] = await Promise.all([
+        api.get('/inventory'),
+        api.get('/sales/growth')
+      ]);
+      setInventory(invResponse.data);
+      setSalesGrowth(growthResponse.data?.growth || 0);
     } catch (err) {
       console.error(err);
     } finally {
@@ -67,9 +74,9 @@ export default function Dashboard() {
         />
         <StatCard 
           title="Sales Growth" 
-          value="+12.5%" 
+          value={`${salesGrowth > 0 ? '+' : ''}${salesGrowth.toFixed(1)}%`} 
           icon={TrendingUp} 
-          colorClass="bg-purple-100 text-purple-600" 
+          colorClass={salesGrowth >= 0 ? "bg-purple-100 text-purple-600" : "bg-red-100 text-red-600"} 
         />
       </div>
 
@@ -98,7 +105,12 @@ export default function Dashboard() {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.sku}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-red-600">{item.quantity}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.reorderLevel}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:text-blue-900 cursor-pointer">Restock</td>
+                    <td 
+                      className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:text-blue-900 cursor-pointer"
+                      onClick={() => navigate('/reorders', { state: { tab: 'create' } })}
+                    >
+                      Restock
+                    </td>
                   </tr>
                 ))}
               </tbody>

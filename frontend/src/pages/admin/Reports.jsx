@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import api from '../api';
+import api from '../../api';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { DollarSign, AlertTriangle, ArrowUpRight, ArrowDownRight, RefreshCcw, PlusCircle } from 'lucide-react';
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import api from '../api';
+import api from '../../api';
 import { Truck } from 'lucide-react';
 
 export default function ProductsSupplied() {

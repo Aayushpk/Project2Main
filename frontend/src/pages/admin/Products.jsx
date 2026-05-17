@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import api from '../api';
+import api from '../../api';
 import { Plus, Edit2, Check, X, Trash2 } from 'lucide-react';
 
 export default function Products() {
